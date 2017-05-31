@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test",
     "prepublish": "npm run build"
   },
   "author": {
@@ -36,6 +36,8 @@
     "@types/node": "^7.0.18"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "mocha": "^3.4.2",
     "typescript": "^2.3.2"
   }
 }
