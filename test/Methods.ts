@@ -1,5 +1,6 @@
 
 import {equal} from 'assert';
+
 import {Methods} from '..';
 
 

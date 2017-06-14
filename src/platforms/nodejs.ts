@@ -1,6 +1,7 @@
 
 import {request} from 'http';
 import {parse} from 'url';
+
 import {PlatformRequestConfig} from './request';
 import {Response} from '../Response';
 

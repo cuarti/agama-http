@@ -8,7 +8,7 @@ const req: platformRequest = getPlatformRequest();
 
 
 export function get<T>(url: string, config?: Config): Promise<T> {
-    return request(Methods.GET, url, config);
+    return request(Methods.GET, url, null, config);
 }
 
 export function post<T>(url: string, data?: Object, config?: Config): Promise<T> {
@@ -20,7 +20,7 @@ export function put<T>(url: string, data?: Object, config?: Config): Promise<T> 
 }
 
 export function del<T>(url: string, config?: Config): Promise<T> {
-    return request(Methods.DELETE, url, config);
+    return request(Methods.DELETE, url, null, config);
 }
 
 export function request<T>(method: string, url: string, data?: Object, config: Config = {}): Promise<T> {
@@ -32,6 +32,10 @@ export function request<T>(method: string, url: string, data?: Object, config: C
     let cfg: PlatformRequestConfig = {
         headers: config.headers || {}
     };
+
+    if(config.userAgent) {
+        cfg.headers['User-Agent'] = config.userAgent;
+    }
 
     if(config.body) {
         cfg.body = config.body;
