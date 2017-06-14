@@ -2,6 +2,7 @@
 import {Config} from './Config';
 import {Methods} from './Methods';
 import {platformRequest, getPlatformRequest, PlatformRequestConfig} from './platforms/request';
+import {SimpleQueryStringParser} from './SimpleQueryStringParser';
 
 
 const req: platformRequest = getPlatformRequest();
@@ -29,12 +30,18 @@ export function request<T>(method: string, url: string, data?: Object, config: C
     //TODO: Preparar body de data y config con adapter
     //TODO: Preparar params de url (a lo route params de express o sentencias preparadas de SQL)
 
+    config.queryStringParser || (config.queryStringParser = new SimpleQueryStringParser());
+
     let cfg: PlatformRequestConfig = {
         headers: config.headers || {}
     };
 
     if(config.userAgent) {
         cfg.headers['User-Agent'] = config.userAgent;
+    }
+
+    if(config.query) {
+        url += '?' + config.queryStringParser.serialize(config.query);
     }
 
     if(config.body) {

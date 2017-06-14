@@ -1,5 +1,5 @@
 
-import {equal} from 'assert';
+import {equal, deepEqual} from 'assert';
 
 import {get} from '..';
 
@@ -14,14 +14,29 @@ describe('helpers', () => {
 
         describe('user-agent', () => {
 
+            let userAgent = 'AgamaBot';
+
             it('should have same user-agent', done => {
-                get('https://httpbin.org/user-agent', {userAgent: 'AgamaBot'}).then(data => {
-                    data = JSON.parse(data as string);
-                    console.log(data['user-agent']);
-                    equal(data['user-agent'], 'AgamaBot');
+                get<string>('https://httpbin.org/user-agent', {userAgent: userAgent}).then(res => {
+                    let data = JSON.parse(res);
+                    equal(data['user-agent'], userAgent);
                     done();
-                }).catch(err => done(err))
-            })
+                }).catch(done);
+            });
+
+        });
+
+        describe('query-string', () => {
+
+            let query = {text: 'Hello World', num: 27}
+
+            it('should have same query string', done => {
+                get<string>('https://httpbin.org/get', {query: query}).then(res => {
+                    let data = JSON.parse(res);
+                    deepEqual(data.args, query);
+                    done();
+                }).catch(done);
+            });
 
         });
 

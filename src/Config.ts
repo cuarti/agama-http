@@ -1,4 +1,6 @@
 
+import {QueryStringParser} from './QueryStringParser';
+
 
 export interface Config {
     url?: string;
@@ -8,4 +10,5 @@ export interface Config {
     // params?: Object;
     headers?: Object;
     userAgent?: string;
+    queryStringParser?: QueryStringParser;
 }
