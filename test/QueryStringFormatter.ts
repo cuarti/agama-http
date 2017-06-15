@@ -2,14 +2,14 @@
 import {equal, deepEqual} from 'assert';
 import {stringify, parse} from 'querystring';
 
-import {SimpleQueryStringParser} from '..';
+import {QueryStringFormatter} from '..';
 
 
 //TODO: Tests with special symbols, like dot, ampersand, etc, in key and value
 //TODO: Tests with encodedURI symbols
-describe('SimpleQueryStringParser', () => {
+describe('QueryStringFormatter', () => {
 
-    let parser = new SimpleQueryStringParser();
+    let parser = new QueryStringFormatter();
 
     describe('#parse()', () => {
 

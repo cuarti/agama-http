@@ -1,5 +1,6 @@
 
-import {QueryStringParser} from './QueryStringParser';
+import {DataFormatter} from './formatters/DataFormatter';
+import {QueryStringFormatter} from './formatters/QueryStringFormatter';
 
 
 export interface Config {
@@ -10,5 +11,6 @@ export interface Config {
     // params?: Object;
     headers?: Object;
     userAgent?: string;
-    queryStringParser?: QueryStringParser;
+    queryFormatter?: QueryStringFormatter;
+    bodyFormatter?: DataFormatter;
 }

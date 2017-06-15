@@ -1,19 +1,29 @@
 
-import {QueryStringParser} from './QueryStringParser';
+import {DataFormatter} from './DataFormatter';
 
 
-export class SimpleQueryStringParser implements QueryStringParser {
+//TODO: abstraer metodos creando nuevos metodos protegidos para parsear cada propiedad del objeto
+//      de esta manera se pueden crear subclases de QueryStringFormatter para formatters propios (AdvancedQueryStringFormatter)
+export class QueryStringFormatter implements DataFormatter {
 
-    public parse<T>(qs: string): T {
+    public static readonly CONTENT_TYPE: string = 'application/x-www-form-urlencoded';
 
-        let data = {};
-        let match = qs.match(/[^=&]*=[^&]*&?/g);
+    public contentType: string;
+
+    public constructor() {
+        this.contentType = QueryStringFormatter.CONTENT_TYPE;
+    }
+
+    public parse<T>(data: string): T {
+
+        let parsed = {};
+        let match = data.match(/[^=&]*=[^&]*&?/g);
 
         if(match) {
             match.forEach(i => {
 
                 let [k, v] = i.split('=');
-                let d = data[k];
+                let d = parsed[k];
                 let lastIndex = v.length - 1;
 
                 if(v[lastIndex] === '&') {
@@ -21,18 +31,18 @@ export class SimpleQueryStringParser implements QueryStringParser {
                 }
 
                 if(!d) {
-                    return data[k] = v;
+                    return parsed[k] = v;
                 }
 
                 if(!(d instanceof Array)) {
-                    d = data[k] = [d];
+                    d = parsed[k] = [d];
                 }
 
                 d.push(v);
             });
         }
 
-        return data as T;
+        return parsed as T;
     }
 
     public serialize(data: Object): string {

@@ -2,7 +2,7 @@
 import {Config} from './Config';
 import {Methods} from './Methods';
 import {platformRequest, getPlatformRequest, PlatformRequestConfig} from './platforms/request';
-import {SimpleQueryStringParser} from './SimpleQueryStringParser';
+import {QueryStringFormatter} from './formatters/QueryStringFormatter';
 
 
 const req: platformRequest = getPlatformRequest();
@@ -12,11 +12,11 @@ export function get<T>(url: string, config?: Config): Promise<T> {
     return request(Methods.GET, url, null, config);
 }
 
-export function post<T>(url: string, data?: Object, config?: Config): Promise<T> {
+export function post<T>(url: string, data?: any, config?: Config): Promise<T> {
     return request(Methods.POST, url, data, config);
 }
 
-export function put<T>(url: string, data?: Object, config?: Config): Promise<T> {
+export function put<T>(url: string, data?: any, config?: Config): Promise<T> {
     return request(Methods.PUT, url, data, config);
 }
 
@@ -24,13 +24,13 @@ export function del<T>(url: string, config?: Config): Promise<T> {
     return request(Methods.DELETE, url, null, config);
 }
 
-export function request<T>(method: string, url: string, data?: Object, config: Config = {}): Promise<T> {
+export function request<T>(method: string, url: string, data?: any, config: Config = {}): Promise<T> {
 
-    //TODO: Preparar query string de data y config
-    //TODO: Preparar body de data y config con adapter
     //TODO: Preparar params de url (a lo route params de express o sentencias preparadas de SQL)
 
-    config.queryStringParser || (config.queryStringParser = new SimpleQueryStringParser());
+    data || (data = config.body);
+
+    config.queryFormatter || (config.queryFormatter = new QueryStringFormatter());
 
     let cfg: PlatformRequestConfig = {
         headers: config.headers || {}
@@ -41,11 +41,22 @@ export function request<T>(method: string, url: string, data?: Object, config: C
     }
 
     if(config.query) {
-        url += '?' + config.queryStringParser.serialize(config.query);
+        url += '?' + config.queryFormatter.serialize(config.query);
     }
 
-    if(config.body) {
-        cfg.body = config.body;
+    if(data) {
+
+        if(!cfg.headers['Content-Type']) {
+            cfg.headers['Content-Type'] = config.bodyFormatter  && config.bodyFormatter.contentType
+                ? config.bodyFormatter.contentType : 'text/plain';
+        }
+
+        cfg.body = config.bodyFormatter ? config.bodyFormatter.serialize(data) : data;
+
+        if(!cfg.headers['Content-Length']) {
+            cfg.headers['Content-Length'] = Buffer.byteLength(cfg.body);
+        }
+
     }
 
     //TODO: Usar adapter
