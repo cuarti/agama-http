@@ -3,6 +3,8 @@
 *.js
 *.d.ts
 *.js.map
+!/*.js
+!/dist/*
 
 ### Platform
 node_modules/
