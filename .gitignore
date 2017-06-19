@@ -3,6 +3,8 @@
 *.js
 *.d.ts
 *.js.map
+!/*.js
+!/dist/*
 
 ### Platform
 node_modules/
@@ -13,7 +15,6 @@ typings/
 
 ### Build destination
 build/
-dist/
 out/
 gen/
 

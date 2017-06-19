@@ -54,7 +54,7 @@ export function request<T>(method: string, url: string, data?: any, config: Conf
         cfg.body = config.bodyFormatter ? config.bodyFormatter.serialize(data) : data;
 
         if(!cfg.headers['Content-Length']) {
-            cfg.headers['Content-Length'] = Buffer.byteLength(cfg.body);
+            cfg.headers['Content-Length'] = cfg.body.length;
         }
 
     }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Agama Platform</title>
+        <script type="text/javascript" src="../dist/agama.http.js" ></script>
+    </head>
+    <body>
+        <script type="text/javascript" >
+
+            agama.http.get('https://httpbin.org/user-agent').then(function(res) {
+                document.write(JSON.parse(res)['user-agent']);
+            });
+
+        </script>
+    </body>
+</html>
