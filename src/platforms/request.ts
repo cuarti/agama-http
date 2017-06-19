@@ -14,5 +14,5 @@ export interface platformRequest {
 }
 
 export function getPlatformRequest(): platformRequest {
-    return require('./' + (IS_NODEJS ? 'nodejs' : 'browser'));
+    return IS_NODEJS ? require('./nodejs') : require('./browser');
 }

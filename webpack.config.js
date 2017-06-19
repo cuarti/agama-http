@@ -1,6 +1,6 @@
 
-const webpack = require('webpack');
 const {resolve} = require('path');
+const {NamedModulesPlugin} = require('webpack');
 const {CheckerPlugin} = require('awesome-typescript-loader');
 
 
@@ -10,11 +10,13 @@ module.exports = {
 
     context: resolve(__dirname, 'src'),
 
-    entry: './index.js',
+    entry: './index.ts',
 
     output: {
-        filename: 'agama_http.js',
-        path: resolve(__dirname, 'dist')
+        filename: 'agama.http.js',
+        path: resolve(__dirname, 'dist'),
+        library: ['agama', 'http'],
+        libraryTarget: 'umd'
     },
 
     resolve: {
@@ -30,9 +32,13 @@ module.exports = {
         ]
     },
 
+    //node: {
+    //    process: false
+    //},
+
     plugins: [
         new CheckerPlugin(),
-        // new webpack.NamedModulesPlugin()
+        new NamedModulesPlugin()
     ]
 
 };

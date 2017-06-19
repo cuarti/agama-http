@@ -15,7 +15,6 @@ typings/
 
 ### Build destination
 build/
-dist/
 out/
 gen/
 
