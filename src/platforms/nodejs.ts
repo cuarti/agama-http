@@ -1,5 +1,6 @@
 
-import {request} from 'http';
+import {request as http} from 'http';
+import {request as https} from 'https';
 import {parse} from 'url';
 
 import {PlatformRequestConfig} from './request';
@@ -12,15 +13,19 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
 
         let u = parse(url);
 
+        let ssl = u.protocol === 'https:';
+
         let opts = {
             hostname: u.host,
-            port: parseInt(u.port) || 80,
+            port: parseInt(u.port) || ssl ? 443 : 80,
             method: method,
             path: u.path,
             headers: config.headers
         };
 
-        let req = request(opts, res => {
+        let lib = ssl ? https : http;
+
+        let req = lib(opts, res => {
 
             let data = '';
             res.setEncoding('utf8');
