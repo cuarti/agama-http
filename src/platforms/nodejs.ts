@@ -12,20 +12,18 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
     return new Promise((resolve, reject) => {
 
         let u = parse(url);
-
         let ssl = u.protocol === 'https:';
+        let func = ssl ? https : http;
 
         let opts = {
-            hostname: u.host,
-            port: parseInt(u.port) || ssl ? 443 : 80,
+            hostname: u.hostname,
+            port: parseInt(u.port) || (ssl ? 443 : 80),
             method: method,
             path: u.path,
             headers: config.headers
         };
 
-        let lib = ssl ? https : http;
-
-        let req = lib(opts, res => {
+        let req = func(opts, res => {
 
             let data = '';
             res.setEncoding('utf8');
