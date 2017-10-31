@@ -3,7 +3,6 @@ import {PlatformRequestConfig} from './request';
 import {Response} from '../Response';
 
 
-//TODO: Pasar header
 export = function(method: string, url: string, config: PlatformRequestConfig): Promise<Response<string>> {
 
     return new Promise((resolve, reject) => {
@@ -11,6 +10,11 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
         let xhr = new XMLHttpRequest();
 
         xhr.open(method, url);
+
+        //TODO: Abstract this part into a function of agama-types
+        Object.keys(config.headers).forEach(k => {
+            xhr.setRequestHeader(k, config.headers[k]);
+        });
 
         xhr.onreadystatechange = () => {
 
