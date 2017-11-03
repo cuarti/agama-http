@@ -684,8 +684,13 @@ module.exports = function (method, url, config) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(method, url);
+        //TODO: Abstract this part into a function of agama-types
+        //TODO: Avoid setting unsafe headers like content-length
+        Object.keys(config.headers).forEach(k => {
+            xhr.setRequestHeader(k, config.headers[k]);
+        });
         xhr.onreadystatechange = () => {
-            if (xhr.readyState !== 4) {
+            if (xhr.readyState !== 4 || xhr.status === 0) {
                 return;
             }
             // if(xhr.status < 300) {

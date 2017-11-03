@@ -2,6 +2,7 @@
 import {IS_NODEJS} from '@agama/platform';
 
 import {Response} from '../Response';
+import {RequestPromise} from '../RequestPromise';
 
 
 export interface PlatformRequestConfig {
@@ -10,7 +11,7 @@ export interface PlatformRequestConfig {
 }
 
 export interface platformRequest {
-    <T>(method: string, url: string, options: PlatformRequestConfig): Promise<Response<T>>;
+    <T>(method: string, url: string, options: PlatformRequestConfig): RequestPromise<T>;
 }
 
 export function getPlatformRequest(): platformRequest {

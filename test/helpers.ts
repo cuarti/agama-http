@@ -19,8 +19,8 @@ describe('helpers', () => {
             let userAgent = 'AgamaBot';
 
             it('should have same user-agent', done => {
-                get<string>('https://httpbin.org/user-agent', {userAgent: userAgent}).then(body => {
-                    let res = JSON.parse(body);
+                get<string>('https://httpbin.org/user-agent', {userAgent: userAgent}).then(({data}) => {
+                    let res = JSON.parse(data);
                     equal(res['user-agent'], userAgent);
                     done();
                 }).catch(done);
@@ -33,8 +33,8 @@ describe('helpers', () => {
             let query = {text: 'Hello World', num: 27};
 
             it('should have same query string', done => {
-                get<string>('https://httpbin.org/get', {query: query}).then(body => {
-                    let res = JSON.parse(body);
+                get<string>('https://httpbin.org/get', {query: query}).then(({data}) => {
+                    let res = JSON.parse(data);
                     deepEqual(res.args, query);
                     done();
                 }).catch(done);
@@ -53,8 +53,7 @@ describe('helpers', () => {
                 let data = 'Hello World';
 
                 post<string>('https://httpbin.org/post', data).then(body => {
-                    let res = JSON.parse(body);
-                    equal(res.data, data);
+                    equal(body.data, data);
                     done();
                 }).catch(done);
             });
@@ -65,7 +64,7 @@ describe('helpers', () => {
                 let config = {bodyFormatter: new QueryStringFormatter()};
 
                 post<string>('https://httpbin.org/post', data, config).then(body => {
-                    let res = JSON.parse(body);
+                    let res = JSON.parse(body.data);
                     deepEqual(res.form, data);
                     done();
                 }).catch(done);
@@ -77,9 +76,8 @@ describe('helpers', () => {
                 let config = {bodyFormatter: new JsonFormatter()};
 
                 post<string>('https://httpbin.org/post', data, config).then(body => {
-                    let res = JSON.parse(body);
-                    res.data = JSON.parse(res.data);
-                    deepEqual(res.data, data);
+                    body.data = JSON.parse(body.data);
+                    deepEqual(body.data, data);
                     done();
                 }).catch(done);
             });

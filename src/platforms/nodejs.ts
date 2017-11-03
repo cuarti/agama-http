@@ -1,15 +1,17 @@
 
-import {request as http} from 'http';
+import {ClientRequest, request as http} from 'http';
 import {request as https} from 'https';
 import {parse} from 'url';
 
 import {PlatformRequestConfig} from './request';
-import {Response} from '../Response';
+import {RequestPromise, RequestPromiseParams} from '../RequestPromise';
 
 
-export = function(method: string, url: string, config: PlatformRequestConfig): Promise<Response<string>> {
+export = function(method: string, url: string, config: PlatformRequestConfig): RequestPromise<string> {
 
-    return new Promise((resolve, reject) => {
+    let params: RequestPromiseParams = {req: null};
+
+    return new RequestPromise((resolve, reject) => {
 
         let u = parse(url);
         let ssl = u.protocol === 'https:';
@@ -23,7 +25,7 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
             headers: config.headers
         };
 
-        let req = func(opts, res => {
+        let req: ClientRequest = params.req = func(opts, res => {
 
             let data = '';
             res.setEncoding('utf8');
@@ -39,7 +41,20 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
 
         });
 
-        req.on('error', reject);
+        //TODO: just temporarily to see that is really aborting the request
+        req.on('abort', () => {
+            console.log('aborting node request');
+        });
+
+        req.on('error', (err) => {
+            // This is because if you abort the request, this event gets called,
+            // but there is no need to call reject if you decided to abort the request
+            if((req as any).aborted) {
+                return;
+            }
+
+            reject(err);
+        });
 
         if(config.body) {
             config.headers['Content-Length'] = Buffer.byteLength(config.body);
@@ -47,6 +62,7 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
         }
 
         req.end();
-    });
+
+    }, params);
 
 }
