@@ -16,6 +16,7 @@
     "dev": "tsc --watch",
     "build": "npm run build:ts && npm run build:webpack",
     "build:ts": "tsc",
+    "dev:ts": "tsc --watch",
     "build:webpack": "webpack",
     "test": "mocha test",
     "prepublish": "npm run build"

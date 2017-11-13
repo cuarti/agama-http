@@ -1,20 +1,26 @@
 
 import {PlatformRequestConfig} from './request';
-import {Response} from '../Response';
+import {RequestPromise} from '../RequestPromise';
 
 
-//TODO: Pasar header
-export = function(method: string, url: string, config: PlatformRequestConfig): Promise<Response<string>> {
+export = function(method: string, url: string, config: PlatformRequestConfig): RequestPromise<string> {
 
-    return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    let params = {req: xhr};
 
-        let xhr = new XMLHttpRequest();
+    return new RequestPromise((resolve, reject) => {
 
         xhr.open(method, url);
 
+        //TODO: Abstract this part into a function of agama-types
+        //TODO: Avoid setting unsafe headers like content-length
+        Object.keys(config.headers).forEach(k => {
+            xhr.setRequestHeader(k, config.headers[k]);
+        });
+
         xhr.onreadystatechange = () => {
 
-            if(xhr.readyState !== 4) {
+            if(xhr.readyState !== 4 || xhr.status === 0) {
                 return;
             }
 
@@ -32,6 +38,6 @@ export = function(method: string, url: string, config: PlatformRequestConfig): P
         };
 
         xhr.send(config.body);
-    });
+    }, params);
 
-}
+};
