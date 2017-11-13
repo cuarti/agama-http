@@ -53,7 +53,7 @@ describe('helpers', () => {
                 let data = 'Hello World';
 
                 post<string>('https://httpbin.org/post', data).then(body => {
-                    equal(body.data, data);
+                    equal(JSON.parse(body.data).data, data);
                     done();
                 }).catch(done);
             });
@@ -76,8 +76,8 @@ describe('helpers', () => {
                 let config = {bodyFormatter: new JsonFormatter()};
 
                 post<string>('https://httpbin.org/post', data, config).then(body => {
-                    body.data = JSON.parse(body.data);
-                    deepEqual(body.data, data);
+                    let d = JSON.parse(body.data);
+                    deepEqual(JSON.parse(d.data), data);
                     done();
                 }).catch(done);
             });

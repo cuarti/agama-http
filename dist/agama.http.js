@@ -525,6 +525,26 @@ exports.Methods = {
 
 /***/ }),
 
+/***/ "./RequestPromise.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class RequestPromise extends Promise {
+    constructor(executor, params) {
+        super(executor);
+        this.params = params;
+    }
+    cancel() {
+        this.params.req.abort();
+    }
+}
+exports.RequestPromise = RequestPromise;
+
+
+/***/ }),
+
 /***/ "./formatters/JsonFormatter.ts":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -651,7 +671,7 @@ function request(method, url, data, config = {}) {
         }
     }
     //TODO: Usar adapter
-    return req(method, url, cfg).then(res => res.data);
+    return req(method, url, cfg);
 }
 exports.request = request;
 
@@ -680,9 +700,11 @@ __export(__webpack_require__("./formatters/JsonFormatter.ts"));
 
 "use strict";
 
+const RequestPromise_1 = __webpack_require__("./RequestPromise.ts");
 module.exports = function (method, url, config) {
-    return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
+    let params = { req: xhr };
+    return new RequestPromise_1.RequestPromise((resolve, reject) => {
         xhr.open(method, url);
         //TODO: Abstract this part into a function of agama-types
         //TODO: Avoid setting unsafe headers like content-length
@@ -705,7 +727,7 @@ module.exports = function (method, url, config) {
             });
         };
         xhr.send(config.body);
-    });
+    }, params);
 };
 
 
