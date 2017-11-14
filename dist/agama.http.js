@@ -531,10 +531,16 @@ exports.Methods = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-class RequestPromise extends Promise {
+class RequestPromise {
     constructor(executor, params) {
-        super(executor);
         this.params = params;
+        this.promise = new Promise(executor);
+    }
+    then(onfulfilled, onrejected) {
+        return this.promise.then(onfulfilled, onrejected);
+    }
+    catch(onrejected) {
+        return this.promise.catch(onrejected);
     }
     cancel() {
         this.params.req.abort();
@@ -701,15 +707,18 @@ __export(__webpack_require__("./formatters/JsonFormatter.ts"));
 "use strict";
 
 const RequestPromise_1 = __webpack_require__("./RequestPromise.ts");
+const UNSAFE_HEADERS = ['Connection', 'Content-Length'];
+
 module.exports = function (method, url, config) {
     let xhr = new XMLHttpRequest();
     let params = { req: xhr };
     return new RequestPromise_1.RequestPromise((resolve, reject) => {
         xhr.open(method, url);
         //TODO: Abstract this part into a function of agama-types
-        //TODO: Avoid setting unsafe headers like content-length
         Object.keys(config.headers).forEach(k => {
-            xhr.setRequestHeader(k, config.headers[k]);
+            if (UNSAFE_HEADERS.indexOf(k) < 0) {
+                xhr.setRequestHeader(k, config.headers[k]);
+            }
         });
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4 || xhr.status === 0) {

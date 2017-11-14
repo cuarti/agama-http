@@ -3,6 +3,8 @@ import {PlatformRequestConfig} from './request';
 import {RequestPromise} from '../RequestPromise';
 
 
+const UNSAFE_HEADERS = ['Connection', 'Content-Length'];
+
 export = function(method: string, url: string, config: PlatformRequestConfig): RequestPromise<string> {
 
     let xhr = new XMLHttpRequest();
@@ -13,9 +15,10 @@ export = function(method: string, url: string, config: PlatformRequestConfig): R
         xhr.open(method, url);
 
         //TODO: Abstract this part into a function of agama-types
-        //TODO: Avoid setting unsafe headers like content-length
         Object.keys(config.headers).forEach(k => {
-            xhr.setRequestHeader(k, config.headers[k]);
+            if(UNSAFE_HEADERS.indexOf(k) < 0) {
+                xhr.setRequestHeader(k, config.headers[k]);
+            }
         });
 
         xhr.onreadystatechange = () => {
