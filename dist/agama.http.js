@@ -708,7 +708,6 @@ __export(__webpack_require__("./formatters/JsonFormatter.ts"));
 
 const RequestPromise_1 = __webpack_require__("./RequestPromise.ts");
 const UNSAFE_HEADERS = ['Connection', 'Content-Length'];
-
 module.exports = function (method, url, config) {
     let xhr = new XMLHttpRequest();
     let params = { req: xhr };
