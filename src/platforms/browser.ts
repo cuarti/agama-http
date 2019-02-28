@@ -19,7 +19,7 @@ export = function(method: string, url: string, config: PlatformRequestConfig): R
 
             if(UNSAFE_HEADERS.indexOf(k) < 0) {
                 let v = config.headers[k];
-                xhr.setRequestHeader(k, typeof v !== 'undefined' ? v.toString() : '');
+                xhr.setRequestHeader(k, v !== undefined && v !== null ? v.toString() : '');
             }
 
         });
