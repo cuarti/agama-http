@@ -16,9 +16,12 @@ export = function(method: string, url: string, config: PlatformRequestConfig): R
 
         //TODO: Abstract this part into a function of agama-types
         Object.keys(config.headers).forEach(k => {
+
             if(UNSAFE_HEADERS.indexOf(k) < 0) {
-                xhr.setRequestHeader(k, config.headers[k]);
+                let v = config.headers[k];
+                xhr.setRequestHeader(k, typeof v !== 'undefined' ? v.toString() : '');
             }
+
         });
 
         xhr.onreadystatechange = () => {

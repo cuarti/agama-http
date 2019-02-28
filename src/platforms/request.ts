@@ -1,13 +1,13 @@
 
 import {IS_NODEJS} from '@agama/platform';
 
-import {Response} from '../Response';
+import {Headers} from '../Headers';
 import {RequestPromise} from '../RequestPromise';
 
 
 export interface PlatformRequestConfig {
     body?: string;
-    headers: Object;
+    headers: Headers;
 }
 
 export interface platformRequest {

@@ -31,6 +31,10 @@ export class RequestPromise<T> implements Promise<Response<T>> {
         return this.promise.catch(onrejected);
     }
 
+    public finally(onfinally?: (() => void) | undefined | null): Promise<Response<T>> {
+        return this.promise.finally(onfinally);
+    }
+
     public cancel(): void {
         this.params.req.abort();
     }
